@@ -37,8 +37,9 @@
 
 /* Live readout number inputs next to sliders */
 .scene-darkness-tools .form-fields input[type="number"] {
-  width: 1.5rem;
-  text-align: right;
+  width: 3rem !important;
+  min-width: 0 !important;
+  text-align: center;
   font-variant-numeric: tabular-nums;
   color: var(--color-text-light-highlight);
   font-size: 0.9em;
