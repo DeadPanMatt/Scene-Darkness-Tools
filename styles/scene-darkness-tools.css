@@ -3,7 +3,7 @@
   min-width: 320px;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem; /* ADD: spacebetween sections */
+  gap: 0.75rem;
 }
 
 /* Preset buttons container */
@@ -16,25 +16,81 @@
 /* Individual preset button styling */
 .scene-darkness-tools .preset-buttons button {
   flex: 1;
-  /* ADDED: subtle colour hints to suggest time of day */
   opacity: 0.85;
   transition: opacity 0.2s ease;
 }
 
 .scene-darkness-tools .preset-buttons button:hover {
-  opacity: 1; /* ADDED: slight brightening on hover for feedback */
+  opacity: 1;
 }
 
-/* ADDED: style the live readout values next to the sliders */
+/* Edit Presets button — smaller and secondary-looking */
+.scene-darkness-tools .manage-presets-btn {
+  font-size: 0.8em;
+  opacity: 0.7;
+  align-self: flex-end;
+  padding: 0.2rem 0.6rem;
+}
+
+.scene-darkness-tools .manage-presets-btn:hover {
+  opacity: 1;
+}
+
+/* Live readout spans next to sliders */
 .scene-darkness-tools .form-fields span {
-  min-width: 2.5rem;       /* stops the layout jumping as numbers change width */
+  min-width: 2.5rem;
   text-align: right;
-  font-variant-numeric: tabular-nums; /* makes numbers fixed-width so they don't shift */
-  color: var(--color-text-light-highlight); /* uses Foundry's own highlight colour */
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-light-highlight);
   font-size: 0.9em;
 }
 
-/* ADDED: make the sliders fill available width */
+/* Make sliders fill available width */
 .scene-darkness-tools .form-fields input[type="range"] {
   flex: 1;
+}
+
+/* ── Manage Presets dialog ── */
+
+.scene-darkness-tools-manage {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 340px;
+}
+
+.manage-hint {
+  font-size: 0.85em;
+  opacity: 0.7;
+  margin: 0;
+}
+
+/* Each preset row: name field, value field, delete button in a line */
+.preset-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.preset-row .preset-name {
+  flex: 2;
+}
+
+.preset-row .preset-value {
+  flex: 1;
+  text-align: right;
+}
+
+.preset-row .delete-preset {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  opacity: 0.6;
+}
+
+.preset-row .delete-preset:hover {
+  opacity: 1;
+  color: var(--color-level-error);
 }
