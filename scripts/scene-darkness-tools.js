@@ -1,3 +1,4 @@
+/* version 0.7.0 */
 const MODULE_ID = "scene-darkness-tools";
 
 const DEFAULT_PRESETS = [
