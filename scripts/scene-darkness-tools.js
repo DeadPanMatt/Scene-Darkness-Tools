@@ -1,5 +1,41 @@
 const MODULE_ID = "scene-darkness-tools";
 
+// Thin wrapper class — Foundry's settings menu needs a class it can instantiate.
+// All it does is open our manage dialog when the settings button is clicked.
+class ManagePresetsMenu extends Application {
+  render() {
+    openManagePresetsDialog();
+    return this;
+  }
+}
+
+// Runs once when Foundry initialises — the only safe time to register settings.
+Hooks.once("init", () => {
+  // Stores the preset array. config:false hides it from the normal settings list
+  // (we manage it through our own dialog instead).
+  game.settings.register(MODULE_ID, "presets", {
+    scope: "world",
+    config: false,
+    type: Array,
+    default: [
+      { name: "Dawn",  value: 0.2  },
+      { name: "Noon",  value: 0    },
+      { name: "Dusk",  value: 0.85 },
+      { name: "Night", value: 1    }
+    ]
+  });
+
+  // Adds a "Manage Presets" button inside the Module Settings panel.
+  game.settings.registerMenu(MODULE_ID, "managePresets", {
+    name: "Darkness Presets",
+    label: "Manage Presets",
+    hint: "Add, rename, or delete the darkness preset buttons.",
+    icon: "fa-solid fa-moon",
+    type: ManagePresetsMenu,
+    restricted: true
+  });
+});
+
 // Adds a GM-only button to the Lighting scene controls.
 Hooks.on("getSceneControlButtons", (controls) => {
   controls.lighting.tools.darknessTools = {
@@ -25,43 +61,39 @@ async function openDarknessDialog() {
       title: game.i18n.localize("SceneDarkness")
     },
     content: buildDarknessDialogContent(),
-    render: (html) => {
-      // --- Darkness slider setup ---
-      const slider = document.querySelector('input[name="darknessLevel"]');
-      // ADDED: a live readout span so the user can see the exact darkness value
-      const darknessReadout = document.querySelector("#darkness-readout");
-
-      // --- Transition slider setup ---
-      const transitionSlider = document.querySelector('input[name="transitionSeconds"]');
-      // ADDED: a live readout span for the transition time
+    render: (event, html) => {
+      const slider            = document.querySelector('input[name="darknessLevel"]');
+      const darknessReadout   = document.querySelector("#darkness-readout");
+      const transitionSlider  = document.querySelector('input[name="transitionSeconds"]');
       const transitionReadout = document.querySelector("#transition-readout");
 
       if (!slider || !transitionSlider) return;
 
-      // ADDED: update the darkness readout live as the slider moves
+      // Updates the darkness readout live as the slider moves
       slider.addEventListener("input", () => {
         darknessReadout.textContent = Number(slider.value).toFixed(2);
       });
 
-      // ADDED: update the transition readout live as the slider moves
+      // Updates the transition readout live as the slider moves
       transitionSlider.addEventListener("input", () => {
         transitionReadout.textContent = `${transitionSlider.value}s`;
       });
 
       // Preset buttons — snap the darkness slider to a preset value
-      const buttons = document.querySelectorAll(".preset-buttons button");
-      buttons.forEach((button) => {
+      document.querySelectorAll(".preset-buttons button").forEach((button) => {
         button.addEventListener("click", () => {
           slider.value = Number(button.dataset.value);
-          // Dispatch "input" so the live readout above also updates when a preset is clicked
           slider.dispatchEvent(new Event("input", { bubbles: true }));
         });
       });
+
+      // Opens the manage dialog. Close and reopen this dialog to see preset changes.
+      document.querySelector("#manage-presets-btn")
+        ?.addEventListener("click", () => openManagePresetsDialog());
     }
   });
 
   if (!result) return;
-
   await handleDarknessUpdate(result);
 }
 
@@ -69,28 +101,26 @@ function buildDarknessDialogContent() {
   const currentDarkness =
     canvas.scene.environment?.darknessLevel ?? canvas.scene.darkness ?? 0;
 
-  // adds preset buttons for common darkness levels, and two sliders: one for darkness level and one for transition time
-  return `
+  // Read presets from settings instead of hardcoding them
+  const presets = game.settings.get(MODULE_ID, "presets");
+  const presetButtons = presets
+    .map(p => `<button type="button" data-value="${p.value}">${p.name}</button>`)
+    .join("");
+
   return `
     <div class="scene-darkness-tools">
       <div class="preset-buttons">
-        <button type="button" data-value="0.2">Dawn</button>
-        <button type="button" data-value="0">Noon</button>
-        <button type="button" data-value="0.85">Dusk</button>
-        <button type="button" data-value="1">Night</button>
+        ${presetButtons}
       </div>
+      <button type="button" id="manage-presets-btn" class="manage-presets-btn">
+        <i class="fa-solid fa-pen-to-square"></i> Edit Presets
+      </button>
 
       <div class="form-group">
         <label>Darkness Level:</label>
         <div class="form-fields">
-          <input
-            type="range"
-            name="darknessLevel"
-            min="0"
-            max="1"
-            step="0.01"
-            value="${currentDarkness}"
-            autofocus>
+          <input type="range" name="darknessLevel" min="0" max="1" step="0.01"
+            value="${currentDarkness}" autofocus>
           <span id="darkness-readout">${currentDarkness.toFixed(2)}</span>
         </div>
       </div>
@@ -98,18 +128,76 @@ function buildDarknessDialogContent() {
       <div class="form-group">
         <label>Transition Time:</label>
         <div class="form-fields">
-          <input
-            type="range"
-            name="transitionSeconds"
-            min="0"
-            max="30"
-            step="1"
-            value="5">
+          <input type="range" name="transitionSeconds" min="0" max="30" step="1" value="5">
           <span id="transition-readout">5s</span>
         </div>
       </div>
     </div>
   `;
+}
+
+async function openManagePresetsDialog() {
+  const presets = game.settings.get(MODULE_ID, "presets");
+
+  const buildRows = (list) => list.map((p, i) => `
+    <div class="preset-row" data-index="${i}">
+      <input type="text"   class="preset-name"  value="${p.name}"  placeholder="Name">
+      <input type="number" class="preset-value" value="${p.value}" min="0" max="1" step="0.01">
+      <button type="button" class="delete-preset" data-index="${i}">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    </div>
+  `).join("");
+
+  await foundry.applications.api.DialogV2.prompt({
+    window: { title: "Manage Darkness Presets" },
+    content: `
+      <div class="scene-darkness-tools-manage">
+        <p class="manage-hint">Reopen the darkness dialog after saving to see changes.</p>
+        <div id="preset-list">${buildRows(presets)}</div>
+        <button type="button" id="add-preset-btn">
+          <i class="fa-solid fa-plus"></i> Add Preset
+        </button>
+      </div>
+    `,
+    ok: {
+      label: "Save",
+      callback: () => {
+        const updated = [];
+        document.querySelectorAll(".preset-row").forEach(row => {
+          const name  = row.querySelector(".preset-name").value.trim();
+          const value = parseFloat(row.querySelector(".preset-value").value);
+          // Only save rows that have a name and a valid 0-1 number
+          if (name && !isNaN(value)) {
+            updated.push({ name, value: Math.max(0, Math.min(1, value)) });
+          }
+        });
+        game.settings.set(MODULE_ID, "presets", updated);
+      }
+    },
+    render: (event, html) => {
+      const list = document.querySelector("#preset-list");
+
+      // Delete a row when its trash button is clicked
+      list.addEventListener("click", (e) => {
+        e.target.closest(".delete-preset")?.closest(".preset-row")?.remove();
+      });
+
+      // Add a blank row at the bottom
+      document.querySelector("#add-preset-btn").addEventListener("click", () => {
+        const row = document.createElement("div");
+        row.className = "preset-row";
+        row.innerHTML = `
+          <input type="text"   class="preset-name"  placeholder="Name">
+          <input type="number" class="preset-value" value="0.5" min="0" max="1" step="0.01">
+          <button type="button" class="delete-preset">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        `;
+        list.appendChild(row);
+      });
+    }
+  });
 }
 
 // Validates the selected values and updates the scene darkness.
