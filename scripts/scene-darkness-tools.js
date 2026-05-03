@@ -1,18 +1,15 @@
 const MODULE_ID = "scene-darkness-tools";
 
-// Thin wrapper class — Foundry's settings menu needs a class it can instantiate.
-// All it does is open our manage dialog when the settings button is clicked.
-class ManagePresetsMenu extends Application {
+class ManagePresetsMenu  {
   render() {
     openManagePresetsDialog();
     return this;
   }
 }
 
-// Runs once when Foundry initialises — the only safe time to register settings.
+// Runs once when Foundry initialises
 Hooks.once("init", () => {
   // Stores the preset array. config:false hides it from the normal settings list
-  // (we manage it through our own dialog instead).
   game.settings.register(MODULE_ID, "presets", {
     scope: "world",
     config: false,
@@ -101,7 +98,7 @@ function buildDarknessDialogContent() {
   const currentDarkness =
     canvas.scene.environment?.darknessLevel ?? canvas.scene.darkness ?? 0;
 
-  // Read presets from settings instead of hardcoding them
+  // Read presets from settings
   const presets = game.settings.get(MODULE_ID, "presets");
   const presetButtons = presets
     .map(p => `<button type="button" data-value="${p.value}">${p.name}</button>`)
@@ -153,28 +150,47 @@ async function openManagePresetsDialog() {
     window: { title: "Manage Darkness Presets" },
     content: `
       <div class="scene-darkness-tools-manage">
-        <p class="manage-hint">Reopen the darkness dialog after saving to see changes.</p>
+        <p class="manage-hint">You may need to reopen the darkness dialog after saving to see changes.</p>
         <div id="preset-list">${buildRows(presets)}</div>
         <button type="button" id="add-preset-btn">
           <i class="fa-solid fa-plus"></i> Add Preset
         </button>
       </div>
     `,
-    ok: {
-      label: "Save",
-      callback: () => {
-        const updated = [];
-        document.querySelectorAll(".preset-row").forEach(row => {
-          const name  = row.querySelector(".preset-name").value.trim();
-          const value = parseFloat(row.querySelector(".preset-value").value);
-          // Only save rows that have a name and a valid 0-1 number
-          if (name && !isNaN(value)) {
-            updated.push({ name, value: Math.max(0, Math.min(1, value)) });
-          }
-        });
-        game.settings.set(MODULE_ID, "presets", updated);
+  ok: {
+  label: "Save",
+  callback: () => {
+    const updated = [];
+    document.querySelectorAll(".preset-row").forEach(row => {
+      const name  = row.querySelector(".preset-name").value.trim();
+      const value = parseFloat(row.querySelector(".preset-value").value);
+      if (name && !isNaN(value)) {
+        updated.push({ name, value: Math.max(0, Math.min(1, value)) });
       }
-    },
+    });
+    game.settings.set(MODULE_ID, "presets", updated);
+
+    // If the main dialog is still open, refresh its preset buttons immediately
+    const presetContainer = document.querySelector(".scene-darkness-tools .preset-buttons");
+    if (presetContainer) {
+      // Rebuild the button HTML from the updated preset list
+      presetContainer.innerHTML = updated
+        .map(p => `<button type="button" data-value="${p.value}">${p.name}</button>`)
+        .join("");
+
+      // Re-attach click listeners to the new buttons
+      const slider = document.querySelector('input[name="darknessLevel"]');
+      if (slider) {
+        presetContainer.querySelectorAll("button").forEach(button => {
+          button.addEventListener("click", () => {
+            slider.value = Number(button.dataset.value);
+            slider.dispatchEvent(new Event("input", { bubbles: true }));
+          });
+        });
+      }
+    }
+  }
+},
     render: (event, html) => {
       const list = document.querySelector("#preset-list");
 
