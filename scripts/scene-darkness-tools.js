@@ -39,6 +39,7 @@ Hooks.once("init", () => {
 });
 
 // Adds a GM-only button to the Lighting scene controls.
+// onChange is the V14+ preferred property but doesn't fire reliably for button:true tools. Revisit when V15 approaches.
 Hooks.on("getSceneControlButtons", (controls) => {
   controls.lighting.tools.darknessTools = {
     name: "darknessTools",
