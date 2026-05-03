@@ -65,28 +65,34 @@ async function openDarknessDialog() {
     },
     content: buildDarknessDialogContent(),
     render: (event, html) => {
-      const slider            = document.querySelector('input[name="darknessLevel"]');
+      const darknessSlider    = document.querySelector('input[name="darknessLevel"]');
       const darknessReadout   = document.querySelector("#darkness-readout");
       const transitionSlider  = document.querySelector('input[name="transitionSeconds"]');
       const transitionReadout = document.querySelector("#transition-readout");
 
-      if (!slider || !transitionSlider) return;
+      if (!darknessSlider || !transitionSlider) return;
 
-      // Updates the darkness readout live as the slider moves
-      slider.addEventListener("input", () => {
-        darknessReadout.textContent = Number(slider.value).toFixed(2);
+      // Slider → readout
+      darknessSlider.addEventListener("input", () => {
+        darknessReadout.value = Number(darknessSlider.value).toFixed(2);
+      });
+      transitionSlider.addEventListener("input", () => {
+        transitionReadout.value = transitionSlider.value;
       });
 
-      // Updates the transition readout live as the slider moves
-      transitionSlider.addEventListener("input", () => {
-        transitionReadout.textContent = `${transitionSlider.value}s`;
+      // Readout → slider (manual entry)
+      darknessReadout.addEventListener("input", () => {
+        darknessSlider.value = Math.max(0, Math.min(1, Number(darknessReadout.value)));
+      });
+      transitionReadout.addEventListener("input", () => {
+        transitionSlider.value = Math.max(0, Math.min(30, Number(transitionReadout.value)));
       });
 
       // Preset buttons — snap the darkness slider to a preset value
       document.querySelectorAll(".preset-buttons button").forEach((button) => {
         button.addEventListener("click", () => {
-          slider.value = Number(button.dataset.value);
-          slider.dispatchEvent(new Event("input", { bubbles: true }));
+          darknessSlider.value = Number(button.dataset.value);
+          darknessSlider.dispatchEvent(new Event("input", { bubbles: true }));
         });
       });
 
@@ -111,7 +117,7 @@ function buildDarknessDialogContent() {
     .map(p => `<button type="button" data-value="${p.value}">${p.name}</button>`)
     .join("");
 
-   return `
+  return `
     <div class="scene-darkness-tools">
       <div class="preset-buttons">
         ${presetButtons}
@@ -125,7 +131,8 @@ function buildDarknessDialogContent() {
         <div class="form-fields">
           <input type="range" name="darknessLevel" min="0" max="1" step="0.01"
             value="${currentDarkness}" autofocus>
-          <span id="darkness-readout">${currentDarkness.toFixed(2)}</span>
+          <input type="number" id="darkness-readout" min="0" max="1" step="0.01"
+            value="${currentDarkness.toFixed(2)}">
         </div>
       </div>
       <p class="darkness-hint">0 is brightest &nbsp;·&nbsp; 1 is darkest</p>
@@ -135,7 +142,9 @@ function buildDarknessDialogContent() {
         <div class="form-fields">
           <input type="range" name="transitionSeconds" min="0" max="30" step="1"
             value="${savedTransition}">
-          <span id="transition-readout">${savedTransition}s</span>
+          <input type="number" id="transition-readout" min="0" max="30" step="1"
+            value="${savedTransition}">
+          <span>s</span>
         </div>
       </div>
       <p class="transition-hint">0 is instant &nbsp;·&nbsp; 30 is slowest</p>
@@ -187,12 +196,12 @@ async function openManagePresetsDialog() {
             .map(p => `<button type="button" data-value="${p.value}">${p.name}</button>`)
             .join("");
 
-          const slider = document.querySelector('input[name="darknessLevel"]');
-          if (slider) {
+          const darknessslider = document.querySelector('input[name="darknessLevel"]');
+          if (darknessslider) {
             presetContainer.querySelectorAll("button").forEach(button => {
               button.addEventListener("click", () => {
-                slider.value = Number(button.dataset.value);
-                slider.dispatchEvent(new Event("input", { bubbles: true }));
+                darknessslider.value = Number(button.dataset.value);
+                darknessslider.dispatchEvent(new Event("input", { bubbles: true }));
               });
             });
           }
