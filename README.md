@@ -65,29 +65,6 @@ From there you can:
 
 ---
 
-## Known Issues
-
-- `SceneControlTool#onClick` is deprecated since Foundry V13 in favour of `onChange`. The toolbar button currently uses `onClick` as `onChange` does not fire reliably for `button: true` tools. This will be investigated before Foundry V15.
-
----
-
-## Changelog
-
-### v1.0.0
-- First stable release
-- Customisable presets with save/restore support
-- Per-scene transition time memory
-- Localisation support (English)
-- Manage presets from Game Settings
-
-### v0.6.x
-- Development and bug fixes
-- Manual value entry on sliders
-- Live preset refresh without reopening dialog
-- Reset to Defaults button
-
----
-
 ## Author
 
 **DeadPanMatt**
