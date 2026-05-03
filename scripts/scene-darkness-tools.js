@@ -25,7 +25,7 @@ async function openDarknessDialog() {
       title: game.i18n.localize("SCENE-DARKNESS-TOOLS.SetSceneDarkness")
     },
     content: buildDarknessDialogContent(),
-    render: (html) => {
+    render: (event, html) => {
       // --- Darkness slider setup ---
       const slider = html.querySelector('input[name="darknessLevel"]');
       // ADDED: a live readout span so the user can see the exact darkness value
