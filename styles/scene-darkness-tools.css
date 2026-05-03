@@ -1,3 +1,4 @@
+/* Container for the darkness tools panel */
 .scene-darkness-tools {
   min-width: 320px;
   display: flex;
@@ -23,7 +24,6 @@
   opacity: 1;
 }
 
-/* Edit Presets button — smaller and secondary-looking */
 .scene-darkness-tools .manage-presets-btn {
   font-size: 0.8em;
   opacity: 0.7;
@@ -44,6 +44,13 @@
   font-size: 0.9em;
 }
 
+/* Hide spinner arrows*/
+.scene-darkness-tools .form-fields input[type="number"]::-webkit-inner-spin-button,
+.scene-darkness-tools .form-fields input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 /* Static unit label (e.g. "s" after transition input) */
 .scene-darkness-tools .form-fields span {
   font-size: 0.9em;
@@ -55,7 +62,7 @@
   flex: 1;
 }
 
-/* ── Manage Presets dialog ── */
+/*  Manage Presets dialog  */
 
 .scene-darkness-tools-manage {
   display: flex;
