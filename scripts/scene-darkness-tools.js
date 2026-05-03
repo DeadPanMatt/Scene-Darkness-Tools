@@ -97,7 +97,9 @@ function buildDarknessDialogContent() {
   const currentDarkness =
     canvas.scene.environment?.darknessLevel ?? canvas.scene.darkness ?? 0;
 
-  // Read presets from settings
+  // Load the last-used transition time for this scene, defaulting to 5
+  const savedTransition = canvas.scene.getFlag(MODULE_ID, "transitionSeconds") ?? 5;
+
   const presets = game.settings.get(MODULE_ID, "presets");
   const presetButtons = presets
     .map(p => `<button type="button" data-value="${p.value}">${p.name}</button>`)
@@ -114,6 +116,7 @@ function buildDarknessDialogContent() {
 
       <div class="form-group">
         <label>Darkness Level:</label>
+        <p class="darkness-hint">0 is brightest &nbsp;·&nbsp; 1 is darkest</p>
         <div class="form-fields">
           <input type="range" name="darknessLevel" min="0" max="1" step="0.01"
             value="${currentDarkness}" autofocus>
@@ -124,8 +127,9 @@ function buildDarknessDialogContent() {
       <div class="form-group">
         <label>Transition Time:</label>
         <div class="form-fields">
-          <input type="range" name="transitionSeconds" min="0" max="30" step="1" value="5">
-          <span id="transition-readout">5s</span>
+          <input type="range" name="transitionSeconds" min="0" max="30" step="1"
+            value="${savedTransition}">
+          <span id="transition-readout">${savedTransition}s</span>
         </div>
       </div>
     </div>
@@ -225,6 +229,9 @@ async function handleDarknessUpdate(result) {
 
   const transitionSeconds = Number(result.transitionSeconds) || 0;
   const transitionTime = transitionSeconds * 1000;
+
+  // Save the transition time so this scene remembers it next time
+  await canvas.scene.setFlag(MODULE_ID, "transitionSeconds", transitionSeconds);
 
   await canvas.scene.update(
     { environment: { darknessLevel } },
