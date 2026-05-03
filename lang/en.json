@@ -1,0 +1,17 @@
+{
+  "SCENE-DARKNESS-TOOLS.DialogTitle": "Set Scene Darkness",
+  "SCENE-DARKNESS-TOOLS.NoActiveScene": "No active scene found.",
+  "SCENE-DARKNESS-TOOLS.EditPresets": "Edit Presets",
+  "SCENE-DARKNESS-TOOLS.DarknessLevel": "Darkness Level",
+  "SCENE-DARKNESS-TOOLS.DarknessHint": "0 is brightest · 1 is darkest",
+  "SCENE-DARKNESS-TOOLS.TransitionTime": "Transition Time",
+  "SCENE-DARKNESS-TOOLS.TransitionHint": "0s is instant · 30s is slowest",
+  "SCENE-DARKNESS-TOOLS.ManagePresetsTitle": "Manage Darkness Presets",
+  "SCENE-DARKNESS-TOOLS.ManagePresetsHint": "Changes apply immediately to the open dialog.",
+  "SCENE-DARKNESS-TOOLS.AddPreset": "Add Preset",
+  "SCENE-DARKNESS-TOOLS.ResetToDefaults": "Reset to Defaults",
+  "SCENE-DARKNESS-TOOLS.Save": "Save",
+  "SCENE-DARKNESS-TOOLS.SettingsMenuName": "Darkness Presets",
+  "SCENE-DARKNESS-TOOLS.SettingsMenuLabel": "Manage Presets",
+  "SCENE-DARKNESS-TOOLS.SettingsMenuHint": "Add, rename, or delete the darkness preset buttons."
+}
