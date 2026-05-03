@@ -53,10 +53,9 @@
   margin: 0;
 }
 
-/* Static unit label (e.g. "s" after transition input) */
-.scene-darkness-tools .form-fields span {
-  font-size: 0.9em;
-  color: var(--color-text-light-highlight);
+/* Make sliders fill available width */
+.scene-darkness-tools .form-fields input[type="range"] {
+  flex: 1;
 }
 
 /*  Manage Presets dialog  */
@@ -66,6 +65,12 @@
   flex-direction: column;
   gap: 0.5rem;
   min-width: 340px;
+}
+
+/* Add Preset and Reset to Defaults buttons side by side */
+.preset-actions {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .manage-hint {
