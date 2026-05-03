@@ -1,8 +1,14 @@
 const MODULE_ID = "scene-darkness-tools";
 
-class ManagePresetsMenu extends FormApplication {
-  async _render() {
+class ManagePresetsMenu extends foundry.applications.api.ApplicationV2 {
+  static DEFAULT_OPTIONS = {
+    id: "scene-darkness-manage-presets",
+    window: { title: "Manage Presets" }
+  };
+
+  async render() {
     await openManagePresetsDialog();
+    return this;
   }
 }
 
