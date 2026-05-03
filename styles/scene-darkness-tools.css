@@ -59,11 +59,6 @@
   color: var(--color-text-light-highlight);
 }
 
-/* Make sliders fill available width */
-.scene-darkness-tools .form-fields input[type="range"] {
-  flex: 1;
-}
-
 /*  Manage Presets dialog  */
 
 .scene-darkness-tools-manage {
