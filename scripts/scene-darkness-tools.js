@@ -111,7 +111,7 @@ function buildDarknessDialogContent() {
     .map(p => `<button type="button" data-value="${p.value}">${p.name}</button>`)
     .join("");
 
-  return `
+   return `
     <div class="scene-darkness-tools">
       <div class="preset-buttons">
         ${presetButtons}
@@ -122,13 +122,13 @@ function buildDarknessDialogContent() {
 
       <div class="form-group">
         <label>Darkness Level:</label>
-        <p class="darkness-hint">0 is brightest &nbsp;·&nbsp; 1 is darkest</p>
         <div class="form-fields">
           <input type="range" name="darknessLevel" min="0" max="1" step="0.01"
             value="${currentDarkness}" autofocus>
           <span id="darkness-readout">${currentDarkness.toFixed(2)}</span>
         </div>
       </div>
+      <p class="darkness-hint">0 is brightest &nbsp;·&nbsp; 1 is darkest</p>
 
       <div class="form-group">
         <label>Transition Time:</label>
@@ -138,6 +138,7 @@ function buildDarknessDialogContent() {
           <span id="transition-readout">${savedTransition}s</span>
         </div>
       </div>
+      <p class="transition-hint">0 is instant &nbsp;·&nbsp; 30 is slowest</p>
     </div>
   `;
 }
