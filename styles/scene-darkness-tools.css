@@ -1,0 +1,40 @@
+/* Container for the darkness tools panel */
+.scene-darkness-tools {
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* ADD: spacebetween sections */
+}
+
+/* Preset buttons container */
+.scene-darkness-tools .preset-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Individual preset button styling */
+.scene-darkness-tools .preset-buttons button {
+  flex: 1;
+  /* ADDED: subtle colour hints to suggest time of day */
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.scene-darkness-tools .preset-buttons button:hover {
+  opacity: 1; /* ADDED: slight brightening on hover for feedback */
+}
+
+/* ADDED: style the live readout values next to the sliders */
+.scene-darkness-tools .form-fields span {
+  min-width: 2.5rem;       /* stops the layout jumping as numbers change width */
+  text-align: right;
+  font-variant-numeric: tabular-nums; /* makes numbers fixed-width so they don't shift */
+  color: var(--color-text-light-highlight); /* uses Foundry's own highlight colour */
+  font-size: 0.9em;
+}
+
+/* ADDED: make the sliders fill available width */
+.scene-darkness-tools .form-fields input[type="range"] {
+  flex: 1;
+}
