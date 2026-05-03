@@ -146,7 +146,7 @@ function buildDarknessDialogContent() {
             value="${savedTransition}" style="width: 3rem !important">
         </div>
       </div>
-      <p class="transition-hint">0 is instant &nbsp;·&nbsp; 30 is slowest</p>
+      <p class="transition-hint">0s is instant &nbsp;·&nbsp; 30s is slowest</p>
     </div>
   `;
 }
