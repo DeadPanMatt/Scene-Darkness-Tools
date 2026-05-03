@@ -1,11 +1,12 @@
 const MODULE_ID = "scene-darkness-tools";
 
-class ManagePresetsMenu  {
-  render() {
-    openManagePresetsDialog();
-    return this;
+class ManagePresetsMenu extends FormApplication {
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      id: "scene-darkness-manage-presets",
+      title: "Manage Presets"
+    });
   }
-}
 
 // Runs once when Foundry initialises
 Hooks.once("init", () => {
