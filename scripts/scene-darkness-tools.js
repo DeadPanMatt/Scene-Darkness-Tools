@@ -47,7 +47,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     order: Object.keys(controls.lighting.tools).length,
     button: true,
     visible: game.user.isGM,
-    onchange: () => openDarknessDialog()
+    onclick: () => openDarknessDialog()
   };
 });
 
