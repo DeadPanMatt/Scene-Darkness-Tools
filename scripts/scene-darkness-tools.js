@@ -1,5 +1,12 @@
 const MODULE_ID = "scene-darkness-tools";
 
+const DEFAULT_PRESETS = [
+  { name: "Dawn",  value: 0.2  },
+  { name: "Noon",  value: 0    },
+  { name: "Dusk",  value: 0.85 },
+  { name: "Night", value: 1    }
+];
+
 class ManagePresetsMenu extends foundry.applications.api.ApplicationV2 {
   static DEFAULT_OPTIONS = {
     id: "scene-darkness-manage-presets",
@@ -19,12 +26,7 @@ Hooks.once("init", () => {
     scope: "world",
     config: false,
     type: Array,
-    default: [
-      { name: "Dawn",  value: 0.2  },
-      { name: "Noon",  value: 0    },
-      { name: "Dusk",  value: 0.85 },
-      { name: "Night", value: 1    }
-    ]
+    default: DEFAULT_PRESETS
   });
 
   // Adds a "Manage Presets" button inside the Module Settings panel.
@@ -170,9 +172,14 @@ async function openManagePresetsDialog() {
       <div class="scene-darkness-tools-manage">
         <p class="manage-hint">Changes apply immediately to the open dialog.</p>
         <div id="preset-list">${buildRows(presets)}</div>
-        <button type="button" id="add-preset-btn">
-          <i class="fa-solid fa-plus"></i> Add Preset
-        </button>
+        <div class="preset-actions">
+          <button type="button" id="add-preset-btn">
+            <i class="fa-solid fa-plus"></i> Add Preset
+          </button>
+          <button type="button" id="reset-presets-btn">
+            <i class="fa-solid fa-rotate-left"></i> Reset to Defaults
+          </button>
+        </div>
       </div>
     `,
     ok: {
@@ -227,6 +234,11 @@ async function openManagePresetsDialog() {
           </button>
         `;
         list.appendChild(row);
+      });
+
+      // Replace all rows with the original defaults
+      document.querySelector("#reset-presets-btn").addEventListener("click", () => {
+        list.innerHTML = buildRows(DEFAULT_PRESETS);
       });
     }
   });
