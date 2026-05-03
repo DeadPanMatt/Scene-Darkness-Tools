@@ -132,7 +132,7 @@ function buildDarknessDialogContent() {
           <input type="range" name="darknessLevel" min="0" max="1" step="0.01"
             value="${currentDarkness}" autofocus>
           <input type="number" id="darkness-readout" min="0" max="1" step="0.01"
-            value="${currentDarkness.toFixed(2)}">
+            value="${currentDarkness.toFixed(2)}" style="width: 3rem !important">
         </div>
       </div>
       <p class="darkness-hint">0 is brightest &nbsp;·&nbsp; 1 is darkest</p>
@@ -143,7 +143,7 @@ function buildDarknessDialogContent() {
           <input type="range" name="transitionSeconds" min="0" max="30" step="1"
             value="${savedTransition}">
           <input type="number" id="transition-readout" min="0" max="30" step="1"
-            value="${savedTransition}">
+            value="${savedTransition}" style="width: 3rem !important">
           <span>s</span>
         </div>
       </div>
