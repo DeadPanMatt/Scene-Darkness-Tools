@@ -37,6 +37,7 @@
 
 /* Live readout number inputs next to sliders */
 .scene-darkness-tools .form-fields input[type="number"] {
+  flex: none !important;
   width: 3rem !important;
   min-width: 0 !important;
   text-align: center;
