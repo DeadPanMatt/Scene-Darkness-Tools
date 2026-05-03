@@ -144,7 +144,6 @@ function buildDarknessDialogContent() {
             value="${savedTransition}">
           <input type="number" id="transition-readout" min="0" max="30" step="1"
             value="${savedTransition}" style="width: 3rem !important">
-          <span>s</span>
         </div>
       </div>
       <p class="transition-hint">0 is instant &nbsp;·&nbsp; 30 is slowest</p>
