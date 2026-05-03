@@ -196,12 +196,12 @@ async function openManagePresetsDialog() {
             .map(p => `<button type="button" data-value="${p.value}">${p.name}</button>`)
             .join("");
 
-          const darknessslider = document.querySelector('input[name="darknessLevel"]');
-          if (darknessslider) {
+          const darknessSlider = document.querySelector('input[name="darknessLevel"]');
+          if (darknessSlider) {
             presetContainer.querySelectorAll("button").forEach(button => {
               button.addEventListener("click", () => {
-                darknessslider.value = Number(button.dataset.value);
-                darknessslider.dispatchEvent(new Event("input", { bubbles: true }));
+                darknessSlider.value = Number(button.dataset.value);
+                darknessSlider.dispatchEvent(new Event("input", { bubbles: true }));
               });
             });
           }
