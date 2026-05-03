@@ -25,16 +25,16 @@ async function openDarknessDialog() {
       title: game.i18n.localize("SCENE-DARKNESS-TOOLS.SetSceneDarkness")
     },
     content: buildDarknessDialogContent(),
-    render: (event, html) => {
+    render: (html) => {
       // --- Darkness slider setup ---
-      const slider = html.querySelector('input[name="darknessLevel"]');
+      const slider = document.querySelector('input[name="darknessLevel"]');
       // ADDED: a live readout span so the user can see the exact darkness value
-      const darknessReadout = html.querySelector("#darkness-readout");
+      const darknessReadout = document.querySelector("#darkness-readout");
 
       // --- Transition slider setup ---
-      const transitionSlider = html.querySelector('input[name="transitionSeconds"]');
+      const transitionSlider = document.querySelector('input[name="transitionSeconds"]');
       // ADDED: a live readout span for the transition time
-      const transitionReadout = html.querySelector("#transition-readout");
+      const transitionReadout = document.querySelector("#transition-readout");
 
       if (!slider || !transitionSlider) return;
 
@@ -49,7 +49,7 @@ async function openDarknessDialog() {
       });
 
       // Preset buttons — snap the darkness slider to a preset value
-      const buttons = html.querySelectorAll(".preset-buttons button");
+      const buttons = document.querySelectorAll(".preset-buttons button");
       buttons.forEach((button) => {
         button.addEventListener("click", () => {
           slider.value = Number(button.dataset.value);
