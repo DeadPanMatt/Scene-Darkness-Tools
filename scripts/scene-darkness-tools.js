@@ -39,7 +39,7 @@ Hooks.once("init", () => {
 });
 
 // Adds a GM-only button to the Lighting scene controls.
-// onChange is the V14+ preferred property but doesn't fire reliably for button:true tools. Revisit when V15 approaches.
+// onClick is deprecated since V13 in favour of onChange, but onChange does not fire reliably for button:true tools. Revisit when V15 approaches.
 Hooks.on("getSceneControlButtons", (controls) => {
   controls.lighting.tools.darknessTools = {
     name: "darknessTools",
@@ -48,7 +48,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     order: Object.keys(controls.lighting.tools).length,
     button: true,
     visible: game.user.isGM,
-    onclick: () => openDarknessDialog()
+    onClick: () => openDarknessDialog()
   };
 });
 
@@ -90,7 +90,6 @@ async function openDarknessDialog() {
         });
       });
 
-      // Opens the manage dialog. Close and reopen this dialog to see preset changes.
       document.querySelector("#manage-presets-btn")
         ?.addEventListener("click", () => openManagePresetsDialog());
     }
@@ -160,47 +159,45 @@ async function openManagePresetsDialog() {
     window: { title: "Manage Darkness Presets" },
     content: `
       <div class="scene-darkness-tools-manage">
-        <p class="manage-hint">You may need to reopen the darkness dialog after saving to see changes.</p>
+        <p class="manage-hint">Changes apply immediately to the open dialog.</p>
         <div id="preset-list">${buildRows(presets)}</div>
         <button type="button" id="add-preset-btn">
           <i class="fa-solid fa-plus"></i> Add Preset
         </button>
       </div>
     `,
-  ok: {
-  label: "Save",
-  callback: () => {
-    const updated = [];
-    document.querySelectorAll(".preset-row").forEach(row => {
-      const name  = row.querySelector(".preset-name").value.trim();
-      const value = parseFloat(row.querySelector(".preset-value").value);
-      if (name && !isNaN(value)) {
-        updated.push({ name, value: Math.max(0, Math.min(1, value)) });
-      }
-    });
-    game.settings.set(MODULE_ID, "presets", updated);
-
-    // If the main dialog is still open, refresh its preset buttons immediately
-    const presetContainer = document.querySelector(".scene-darkness-tools .preset-buttons");
-    if (presetContainer) {
-      // Rebuild the button HTML from the updated preset list
-      presetContainer.innerHTML = updated
-        .map(p => `<button type="button" data-value="${p.value}">${p.name}</button>`)
-        .join("");
-
-      // Re-attach click listeners to the new buttons
-      const slider = document.querySelector('input[name="darknessLevel"]');
-      if (slider) {
-        presetContainer.querySelectorAll("button").forEach(button => {
-          button.addEventListener("click", () => {
-            slider.value = Number(button.dataset.value);
-            slider.dispatchEvent(new Event("input", { bubbles: true }));
-          });
+    ok: {
+      label: "Save",
+      callback: () => {
+        const updated = [];
+        document.querySelectorAll(".preset-row").forEach(row => {
+          const name  = row.querySelector(".preset-name").value.trim();
+          const value = parseFloat(row.querySelector(".preset-value").value);
+          if (name && !isNaN(value)) {
+            updated.push({ name, value: Math.max(0, Math.min(1, value)) });
+          }
         });
+        game.settings.set(MODULE_ID, "presets", updated);
+
+        // If the main dialog is still open, refresh its preset buttons immediately
+        const presetContainer = document.querySelector(".scene-darkness-tools .preset-buttons");
+        if (presetContainer) {
+          presetContainer.innerHTML = updated
+            .map(p => `<button type="button" data-value="${p.value}">${p.name}</button>`)
+            .join("");
+
+          const slider = document.querySelector('input[name="darknessLevel"]');
+          if (slider) {
+            presetContainer.querySelectorAll("button").forEach(button => {
+              button.addEventListener("click", () => {
+                slider.value = Number(button.dataset.value);
+                slider.dispatchEvent(new Event("input", { bubbles: true }));
+              });
+            });
+          }
+        }
       }
-    }
-  }
-},
+    },
     render: (event, html) => {
       const list = document.querySelector("#preset-list");
 
