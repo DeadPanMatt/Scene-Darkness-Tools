@@ -31,9 +31,9 @@ Hooks.once("init", () => {
 
   // Adds a "Manage Presets" button inside the Module Settings panel.
   game.settings.registerMenu(MODULE_ID, "managePresets", {
-    name: "Darkness Presets",
-    label: "Manage Presets",
-    hint: "Add, rename, or delete the darkness preset buttons.",
+    name: "SCENE-DARKNESS-TOOLS.SettingsMenuName",
+    label: "SCENE-DARKNESS-TOOLS.SettingsMenuLabel",
+    hint: "SCENE-DARKNESS-TOOLS.SettingsMenuHint",
     icon: "fa-solid fa-moon",
     type: ManagePresetsMenu,
     restricted: true
@@ -45,7 +45,7 @@ Hooks.once("init", () => {
 Hooks.on("getSceneControlButtons", (controls) => {
   controls.lighting.tools.darknessTools = {
     name: "darknessTools",
-    title: "SceneDarkness",
+    title: "SCENE-DARKNESS-TOOLS.DialogTitle",
     icon: "fa-solid fa-moon",
     order: Object.keys(controls.lighting.tools).length,
     button: true,
@@ -57,13 +57,13 @@ Hooks.on("getSceneControlButtons", (controls) => {
 // Checks if a scene is active, then opens the darkness control dialog.
 async function openDarknessDialog() {
   if (!canvas.scene) {
-    ui.notifications.warn("No active scene found.");
+    ui.notifications.warn(game.i18n.localize("SCENE-DARKNESS-TOOLS.NoActiveScene"));
     return;
   }
 
   const result = await foundry.applications.api.DialogV2.input({
     window: {
-      title: game.i18n.localize("SceneDarkness")
+      title: game.i18n.localize("SCENE-DARKNESS-TOOLS.DialogTitle")
     },
     content: buildDarknessDialogContent(),
     render: (event, html) => {
@@ -125,11 +125,11 @@ function buildDarknessDialogContent() {
         ${presetButtons}
       </div>
       <button type="button" id="manage-presets-btn" class="manage-presets-btn">
-        <i class="fa-solid fa-pen-to-square"></i> Edit Presets
+        <i class="fa-solid fa-pen-to-square"></i> ${game.i18n.localize("SCENE-DARKNESS-TOOLS.EditPresets")}
       </button>
 
       <div class="form-group">
-        <label>Darkness Level:</label>
+        <label>${game.i18n.localize("SCENE-DARKNESS-TOOLS.DarknessLevel")}:</label>
         <div class="form-fields">
           <input type="range" name="darknessLevel" min="0" max="1" step="0.01"
             value="${currentDarkness}" autofocus>
@@ -137,10 +137,10 @@ function buildDarknessDialogContent() {
             value="${currentDarkness.toFixed(2)}" style="width: 3rem !important">
         </div>
       </div>
-      <p class="darkness-hint">0 is brightest &nbsp;·&nbsp; 1 is darkest</p>
+      <p class="darkness-hint">${game.i18n.localize("SCENE-DARKNESS-TOOLS.DarknessHint")}</p>
 
       <div class="form-group">
-        <label>Transition Time:</label>
+        <label>${game.i18n.localize("SCENE-DARKNESS-TOOLS.TransitionTime")}:</label>
         <div class="form-fields">
           <input type="range" name="transitionSeconds" min="0" max="30" step="1"
             value="${savedTransition}">
@@ -148,7 +148,7 @@ function buildDarknessDialogContent() {
             value="${savedTransition}" style="width: 3rem !important">
         </div>
       </div>
-      <p class="transition-hint">0s is instant &nbsp;·&nbsp; 30s is slowest</p>
+      <p class="transition-hint">${game.i18n.localize("SCENE-DARKNESS-TOOLS.TransitionHint")}</p>
     </div>
   `;
 }
@@ -167,23 +167,23 @@ async function openManagePresetsDialog() {
   `).join("");
 
   await foundry.applications.api.DialogV2.prompt({
-    window: { title: "Manage Darkness Presets" },
+    window: { title: game.i18n.localize("SCENE-DARKNESS-TOOLS.ManagePresetsTitle") },
     content: `
       <div class="scene-darkness-tools-manage">
-        <p class="manage-hint">Changes apply immediately to the open dialog.</p>
+        <p class="manage-hint">${game.i18n.localize("SCENE-DARKNESS-TOOLS.ManagePresetsHint")}</p>
         <div id="preset-list">${buildRows(presets)}</div>
         <div class="preset-actions">
           <button type="button" id="add-preset-btn">
-            <i class="fa-solid fa-plus"></i> Add Preset
+            <i class="fa-solid fa-plus"></i> ${game.i18n.localize("SCENE-DARKNESS-TOOLS.AddPreset")}
           </button>
           <button type="button" id="reset-presets-btn">
-            <i class="fa-solid fa-rotate-left"></i> Reset to Defaults
+            <i class="fa-solid fa-rotate-left"></i> ${game.i18n.localize("SCENE-DARKNESS-TOOLS.ResetToDefaults")}
           </button>
         </div>
       </div>
     `,
     ok: {
-      label: "Save",
+      label: game.i18n.localize("SCENE-DARKNESS-TOOLS.Save"),
       callback: () => {
         const updated = [];
         document.querySelectorAll(".preset-row").forEach(row => {
