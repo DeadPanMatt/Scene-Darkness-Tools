@@ -34,7 +34,7 @@ Hooks.once("init", () => {
     name: "SCENE-DARKNESS-TOOLS.SettingsMenuName",
     label: "SCENE-DARKNESS-TOOLS.SettingsMenuLabel",
     hint: "SCENE-DARKNESS-TOOLS.SettingsMenuHint",
-    icon: "fa-solid fa-moon",
+    icon: "fa-solid fa-circle-half-stroke",
     type: ManagePresetsMenu,
     restricted: true
   });
@@ -46,7 +46,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
   controls.lighting.tools.darknessTools = {
     name: "darknessTools",
     title: "SCENE-DARKNESS-TOOLS.DialogTitle",
-    icon: "fa-solid fa-moon",
+    icon: "fa-solid fa-circle-half-stroke",
     order: Object.keys(controls.lighting.tools).length,
     button: true,
     visible: game.user.isGM,
