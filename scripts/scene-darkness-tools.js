@@ -9,7 +9,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     order: Object.keys(controls.lighting.tools).length,
     button: true,
     visible: game.user.isGM,
-    onClick: () => openDarknessDialog() // FIXED: was onChange
+    onClick: () => openDarknessDialog()
   };
 });
 
@@ -69,6 +69,8 @@ function buildDarknessDialogContent() {
   const currentDarkness =
     canvas.scene.environment?.darknessLevel ?? canvas.scene.darkness ?? 0;
 
+  // adds preset buttons for common darkness levels, and two sliders: one for darkness level and one for transition time
+  return `
   return `
     <div class="scene-darkness-tools">
       <div class="preset-buttons">
@@ -89,7 +91,6 @@ function buildDarknessDialogContent() {
             step="0.01"
             value="${currentDarkness}"
             autofocus>
-          <!-- ADDED: live readout of the darkness value, initialised to current scene darkness -->
           <span id="darkness-readout">${currentDarkness.toFixed(2)}</span>
         </div>
       </div>
@@ -104,7 +105,6 @@ function buildDarknessDialogContent() {
             max="30"
             step="1"
             value="5">
-          <!-- CHANGED: was a static "seconds" label. Now shows live value + unit -->
           <span id="transition-readout">5s</span>
         </div>
       </div>
@@ -113,7 +113,6 @@ function buildDarknessDialogContent() {
 }
 
 // Validates the selected values and updates the scene darkness.
-// No changes here — this was already correct!
 async function handleDarknessUpdate(result) {
   let darknessLevel = Number(result.darknessLevel);
 
