@@ -94,3 +94,9 @@
   opacity: 1;
   color: var(--color-level-error);
 }
+
+.darkness-hint {
+  font-size: 0.8em;
+  opacity: 0.6;
+  margin: 0 0 0.25rem 0;
+}
