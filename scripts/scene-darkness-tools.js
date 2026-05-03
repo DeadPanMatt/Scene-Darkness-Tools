@@ -4,7 +4,7 @@ const MODULE_ID = "scene-darkness-tools";
 Hooks.on("getSceneControlButtons", (controls) => {
   controls.lighting.tools.darknessTools = {
     name: "darknessTools",
-    title: "SCENE-DARKNESS-TOOLS.SetSceneDarkness",
+    title: "SceneDarkness",
     icon: "fa-solid fa-moon",
     order: Object.keys(controls.lighting.tools).length,
     button: true,
@@ -22,7 +22,7 @@ async function openDarknessDialog() {
 
   const result = await foundry.applications.api.DialogV2.input({
     window: {
-      title: game.i18n.localize("SCENE-DARKNESS-TOOLS.SetSceneDarkness")
+      title: game.i18n.localize("SceneDarkness")
     },
     content: buildDarknessDialogContent(),
     render: (html) => {
