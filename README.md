@@ -49,7 +49,7 @@ Download the latest release zip from [GitHub Releases](https://github.com/DeadPa
 
 1. Enable the module in **Game Settings → Module Management**
 2. Load a scene
-3. Click the bottom **moon icon** in the Lighting controls toolbar
+3. Click the bottom **half light half dark** circle in the Lighting controls toolbar
 4. Use the preset buttons or sliders to set your desired darkness level and transition time
 5. Click **OK** to apply - the scene will animate to the new darkness level
 
