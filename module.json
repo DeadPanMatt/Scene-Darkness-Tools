@@ -2,7 +2,7 @@
   "id": "scene-darkness-tools",
   "title": "Scene Darkness Tools",
   "description": "Adds a lighting control button for animated scene darkness changes.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "authors": [
     {
       "name": "DeadPanMatt"
@@ -22,6 +22,6 @@
   "esmodules": ["scripts/scene-darkness-tools.js"],
   "styles": ["styles/scene-darkness-tools.css"],
   "manifest": "https://raw.githubusercontent.com/DeadPanMatt/scene-darkness-tools/main/module.json",
-  "download": "https://github.com/DeadPanMatt/scene-darkness-tools/archive/refs/tags/v1.0.0.zip",
+  "download": "https://github.com/DeadPanMatt/scene-darkness-tools/archive/refs/tags/v1.0.1.zip",
   "url": "https://github.com/DeadPanMatt/scene-darkness-tools"
  }
