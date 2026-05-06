@@ -8,7 +8,7 @@ const DEFAULT_PRESETS = [
   { name: "Night", value: 1    }
 ];
 
-// Darkness level before the most recent applyDarkness call — used for undo
+
 let _previousDarkness = null;
 
 class ManagePresetsMenu extends foundry.applications.api.ApplicationV2 {
@@ -35,7 +35,6 @@ class CreateMacrosMenu extends foundry.applications.api.ApplicationV2 {
   }
 }
 
-// Runs once when Foundry initialises
 Hooks.once("init", () => {
   game.settings.register(MODULE_ID, "presets", {
     scope: "world",
@@ -62,7 +61,6 @@ Hooks.once("init", () => {
     restricted: true
   });
 
-  // Keybinding — open the darkness dialog (no default key; GM can assign one in Configure Controls)
   game.keybindings.register(MODULE_ID, "openDialog", {
     name: "SCENE-DARKNESS-TOOLS.KeybindOpenDialog",
     hint: "SCENE-DARKNESS-TOOLS.KeybindOpenDialogHint",
@@ -71,7 +69,6 @@ Hooks.once("init", () => {
     restricted: true
   });
 
-  // Keybinding — undo the last darkness change
   game.keybindings.register(MODULE_ID, "undoDarkness", {
     name: "SCENE-DARKNESS-TOOLS.KeybindUndo",
     hint: "SCENE-DARKNESS-TOOLS.KeybindUndoHint",
@@ -81,7 +78,6 @@ Hooks.once("init", () => {
   });
 });
 
-// Expose the public macro API once Foundry is ready
 Hooks.once("ready", () => {
   game.modules.get(MODULE_ID).api = {
     /**
@@ -91,15 +87,13 @@ Hooks.once("ready", () => {
      */
     setDarkness: (value, seconds = 0) => applyDarkness(value, seconds),
 
-    /** Undo the most recent darkness change applied by this module. */
     undoDarkness: () => undoDarkness(),
 
-    /** Open the darkness control dialog. */
     openDialog: () => openDarknessDialog()
   };
 });
 
-// onClick is deprecated since V13 in favour of onChange, but onChange does not fire reliably for button:true tools. Revisit when V15 approaches.
+
 Hooks.on("getSceneControlButtons", (controls) => {
   controls.lighting.tools.darknessTools = {
     name: "darknessTools",
@@ -112,7 +106,6 @@ Hooks.on("getSceneControlButtons", (controls) => {
   };
 });
 
-// Checks if a scene is active, then opens the darkness control dialog.
 async function openDarknessDialog() {
   if (!canvas.scene) {
     ui.notifications.warn(game.i18n.localize("SCENE-DARKNESS-TOOLS.NoActiveScene"));
@@ -252,7 +245,6 @@ async function openManagePresetsDialog() {
         });
         game.settings.set(MODULE_ID, "presets", updated);
 
-        // If the main dialog is still open, refresh its preset buttons immediately
         const presetContainer = document.querySelector(".scene-darkness-tools .preset-buttons");
         if (presetContainer) {
           presetContainer.innerHTML = updated
@@ -274,12 +266,10 @@ async function openManagePresetsDialog() {
     render: (event, html) => {
       const list = document.querySelector("#preset-list");
 
-      // Delete a row when its trash button is clicked
       list.addEventListener("click", (e) => {
         e.target.closest(".delete-preset")?.closest(".preset-row")?.remove();
       });
 
-      // Add a blank row at the bottom
       document.querySelector("#add-preset-btn").addEventListener("click", () => {
         const row = document.createElement("div");
         row.className = "preset-row";
@@ -293,7 +283,6 @@ async function openManagePresetsDialog() {
         list.appendChild(row);
       });
 
-      // Replace all rows with the original defaults
       document.querySelector("#reset-presets-btn").addEventListener("click", () => {
         list.innerHTML = buildRows(DEFAULT_PRESETS);
       });
@@ -301,7 +290,6 @@ async function openManagePresetsDialog() {
   });
 }
 
-// Validates the selected values and updates the scene darkness.
 async function handleDarknessUpdate(result) {
   let darknessLevel = Number(result.darknessLevel);
 
@@ -311,13 +299,10 @@ async function handleDarknessUpdate(result) {
 
   const transitionSeconds = Number(result.transitionSeconds) || 0;
 
-  // Save the transition time so this scene remembers it next time
   await canvas.scene.setFlag(MODULE_ID, "transitionSeconds", transitionSeconds);
   await applyDarkness(darknessLevel, transitionSeconds);
 }
 
-// Saves previous darkness, then applies the new value with an optional transition.
-// This is also the entry point for the macro API.
 async function applyDarkness(darknessLevel, transitionSeconds = 0) {
   if (!canvas.scene) {
     ui.notifications.warn(game.i18n.localize("SCENE-DARKNESS-TOOLS.NoActiveScene"));
@@ -332,8 +317,6 @@ async function applyDarkness(darknessLevel, transitionSeconds = 0) {
   );
 }
 
-// Restores darkness to what it was before the last applyDarkness call.
-// Calling undo twice toggles between the two most recent values.
 async function undoDarkness() {
   if (!canvas.scene) {
     ui.notifications.warn(game.i18n.localize("SCENE-DARKNESS-TOOLS.NoActiveScene"));
@@ -351,13 +334,10 @@ async function undoDarkness() {
     { animateDarkness: 0 }
   );
 
-  // Swap so calling undo again toggles back
   _previousDarkness = current;
   ui.notifications.info(game.i18n.localize("SCENE-DARKNESS-TOOLS.UndoApplied"));
 }
 
-// Creates a set of ready-made macros in the world's macro directory.
-// Skips any macro whose name already exists so re-clicking the button is safe.
 async function createSampleMacros() {
   const api = `game.modules.get("${MODULE_ID}").api`;
 

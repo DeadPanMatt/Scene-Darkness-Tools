@@ -1,3 +1,4 @@
+
 {
   "SCENE-DARKNESS-TOOLS.DialogTitle": "Set Scene Darkness",
   "SCENE-DARKNESS-TOOLS.NoActiveScene": "No active scene found.",
@@ -26,4 +27,3 @@
   "SCENE-DARKNESS-TOOLS.MacrosCreated": "Scene Darkness Tools: {count} macro(s) created.",
   "SCENE-DARKNESS-TOOLS.MacrosAlreadyExist": "Scene Darkness Tools: all sample macros already exist."
 }
-
